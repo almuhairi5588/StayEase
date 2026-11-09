@@ -1,24 +1,46 @@
-//
-//  ContentView.swift
-//  StayEase
-//
-//  Created by Abdullah Almuhairi on 04/11/2026.
-//
+
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
-    }
-}
+    @Environment(\.modelContext) private var modelContext
+    @Query private var hotels: [Hotel]
 
-#Preview {
-    ContentView()
+    var body: some View {
+        TabView {
+            ExploreView()
+                .tabItem {
+                    Image(systemName: "magnifyingglass")
+                    Text("Explore")
+                }
+
+            Text("Map coming soon")
+                .tabItem {
+                    Image(systemName: "map.fill")
+                    Text("Map")
+                }
+
+            Text("My Trips coming soon")
+                .tabItem {
+                    Image(systemName: "suitcase.fill")
+                    Text("My Trips")
+                }
+
+            Text("Profile coming soon")
+                .tabItem {
+                    Image(systemName: "person.crop.circle")
+                    Text("Profile")
+                }
+        }
+        .onAppear {
+            addSampleHotelsFirstTime()
+        }
+    }
+    func addSampleHotelsFirstTime() {
+        if hotels.isEmpty {
+            addSampleHotels(modelContext: modelContext)
+            try? modelContext.save()
+        }
+    }
 }
